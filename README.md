@@ -3,17 +3,21 @@ javaSSM练手个人博客
 
 ## 所用技术
 - mysql数据库
-- SSM 后台
+- spring mybatis springMVC
 - java
 - ZUI 前端UI框架
+- websocket
 
 ## 项目细节
 
-- 数据库密码使用MD5加密
+- 数据库用户密码使用MD5加密
 - Markdown 编辑器发布动态
 - 图片上传至七牛云
-- 内置聊天机器人
+- 内置聊天机器人(老王)
 - 一周访客统计（图表显示）
+- 内置聊天室（websocket未实现）
+- 打赏功能
+
 
 主页面：
 
