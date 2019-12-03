@@ -21,10 +21,10 @@ public class QiNuiUtil {
 
     public static String[] IMAGE_FILE_EXTD = new String[] { "png", "bmp", "jpg", "jpeg","pdf" };
 
-    private String ACCESS_KEY = "HFkwB3fDylVV1RQqvwywZu4zweYWsYYaSos_0E5x";
-    private String SECRET_KEY = "ptnTMpQGTEG6pbb83ijw2-PQwAhwaKpqbkgVpIVz";
+    private String ACCESS_KEY = "你的七牛云ACCESS_KEY";
+    private String SECRET_KEY = "你的七牛云SECRET_KEY";
     // 要上传的空间
-   private  String bucketname = "yzwblog";
+   private  String bucketname = "你申请的七牛云空间";
 
    private static final Logger logger = LoggerFactory.getLogger(QiNuiUtil.class);
 
@@ -34,7 +34,7 @@ public class QiNuiUtil {
 
    private UploadManager uploadManager = new UploadManager(configuration);
 
-   private  String QINIU_IMAGE_DOMAIN = "http://q1ip7q933.bkt.clouddn.com/";
+   private  String QINIU_IMAGE_DOMAIN = "申请空间后七牛云给你的域名";
 
     // 简单上传，使用默认策略，只需要设置上传的空间名就可以了
     public String getUpToken() {
