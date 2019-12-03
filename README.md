@@ -8,7 +8,7 @@ javaSSM练手个人博客
 - ZUI 前端UI框架
 - websocket
 
-## 项目功能
+## 简单功能介绍
 
 - 数据库用户密码使用MD5加密
 - Markdown 编辑器发布动态
