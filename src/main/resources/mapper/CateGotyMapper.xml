@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yzw.myblog.dao.CateGoryDao">
+
+    <select id="findAll" resultType="cn.yzw.myblog.vo.CateGory">
+        select * from category;
+    </select>
+
+    <delete id="deleteCateGory" parameterType="java.lang.Integer">
+        delete from category where id = #{id};
+    </delete>
+
+    <update id="updateCateGory" parameterType="cn.yzw.myblog.vo.CateGory">
+        update category set categoryname = #{categoryname},categorycontext = #{categorycontext}
+        where id = #{id}
+    </update>
+
+    <insert id="saveCateGory" parameterType="cn.yzw.myblog.vo.CateGory">
+        insert into category(categoryname, categorycontext)
+        values (#{categoryname},#{categorycontext})
+    </insert>
+
+    <select id="findByPage" parameterType="java.util.Map" resultType="cn.yzw.myblog.vo.CateGory">
+        select * from category limit #{start},#{rows}
+    </select>
+
+    <select id="findById" resultType="cn.yzw.myblog.vo.CateGory" parameterType="java.lang.Integer">
+        select * from category where id = #{id}
+    </select>
+
+    <select id="findAllCount" resultType="java.lang.Integer">
+        select count(*) from category
+    </select>
+
+    <select id="findCategoryCount" resultType="java.util.Map">
+        select category.id,category.categoryname,count(*) as categorycount from acticle_category
+        left join category on acticle_category.categoryid = category.id
+        group by category.categoryname,category.id
+    </select>
+
+    <insert id="saveCategoryOfArticle" parameterType="java.lang.Integer">
+        insert into acticle_category(categoryid, articleid)values(#{caid},#{arid})
+    </insert>
+</mapper>

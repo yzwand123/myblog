@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yzw.myblog.dao.FansDao">
+
+    <sql id="f_base_col">
+        fans.id,user.nickname,user.email,user.userName
+    </sql>
+
+    <select id="findByPage" resultType="cn.yzw.myblog.vo.Fans" parameterType="java.util.Map">
+        select <include refid="f_base_col"/> from fans
+        left join user on fans.fanid = user.id
+        where boid = #{boid} limit #{start},#{rows}
+    </select>
+
+    <delete id="deleteFans" parameterType="java.lang.Integer">
+        delete from fans where id = #{id}
+    </delete>
+
+    <insert id="saveFans" parameterType="cn.yzw.myblog.vo.Fans">
+        insert into fans(fanid, boid)values (#{fanId},#{boId})
+    </insert>
+
+     <select id="findFansCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(*) from fans where boid = #{id}
+     </select>
+
+</mapper>

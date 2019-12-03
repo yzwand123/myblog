@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yzw.myblog.dao.VisitorDao">
+
+    <select id="findByPage" resultType="cn.yzw.myblog.vo.Visitor" parameterType="java.util.Map">
+        select * from visitor order by id desc limit #{start},#{rows}
+    </select>
+
+    <delete id="deleteVisitor" parameterType="java.lang.Integer">
+        delete from visitor where id = #{id}
+    </delete>
+
+    <insert id="saveVisitor" parameterType="cn.yzw.myblog.vo.Visitor">
+        insert into visitor(name, ip, vtime, location) values (#{name},#{ip},now(),#{location})
+    </insert>
+
+    <select id="findAllCount" resultType="java.lang.Integer">
+        select count(*) from visitor
+    </select>
+
+    <select id="findTodayCount" resultType="java.lang.Integer">
+       select count(*) as vcount
+       from visitor
+       WHERE TO_DAYS(DATE_FORMAT(vtime,'%Y-%m-%d')) = TO_DAYS(NOW())
+    </select>
+
+    <select id="findWeekCount" resultType="java.util.Map">
+        select count(*) as vcount,DATE_FORMAT(vtime,'%Y-%m-%d') as rvtime
+        from visitor
+        WHERE YEARWEEK(DATE_FORMAT(vtime,'%Y-%m-%d')) = YEARWEEK(NOW())
+        GROUP BY rvtime
+        order by rvtime;
+    </select>
+
+</mapper>

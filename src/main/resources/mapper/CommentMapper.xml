@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yzw.myblog.dao.CommentDao">
+
+    <resultMap id="comment" type="cn.yzw.myblog.vo.Comment">
+        <id property="id" column="id"/>
+        <result property="commentUId" column="comment_uid"/>
+        <result property="commentArId" column="comment_arid"/>
+        <result property="commentContext" column="commentcontext"/>
+        <result property="commentTime" column="commenttime"/>
+    </resultMap>
+
+    <sql id="comment_col">
+        comment.id,comment.comment_uid,user.nickname,comment.comment_arid,comment.commentcontext,comment.commenttime
+    </sql>
+
+    <select id="findCommentByArticleId" parameterType="java.lang.Integer" resultMap="comment">
+        select <include refid="comment_col"/>
+        from comment
+        left join user  on comment.comment_uid = user.id
+        where comment.comment_arid = #{id}
+        order by commenttime desc;
+    </select>
+
+    <insert id="saveComment" parameterType="cn.yzw.myblog.vo.Comment">
+        insert into comment(comment_uid, comment_boid, comment_arid, commentcontext, commenttime)
+        values (#{commentUId},#{commentBoId},#{commentArId},#{commentContext},now())
+    </insert>
+
+    <delete id="deleteComment" parameterType="java.lang.Integer">
+       delete from comment where id = #{id}
+    </delete>
+
+    <select id="findByPage" parameterType="java.lang.Integer" resultType="cn.yzw.myblog.vo.Comment">
+        select
+                comment.id,comment.commentcontext,comment.commenttime,comment.comment_arid as commentArId,
+                user.nickname,
+                article.articletitle as arTitle
+        from comment
+        left join user on comment.comment_uid = user.id
+        left join article on comment.comment_arid = article.id
+        order by comment.commenttime desc
+        limit #{start},#{rows}
+    </select>
+
+    <select id="findAllCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(*) from comment where comment_boid = #{id}
+    </select>
+
+</mapper>

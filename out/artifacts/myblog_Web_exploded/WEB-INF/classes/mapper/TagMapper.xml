@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yzw.myblog.dao.TagDao">
+
+    <select id="findAll" resultType="cn.yzw.myblog.vo.Tag">
+        select * from tag
+    </select>
+
+    <select id="findById" parameterType="java.lang.Integer" resultType="cn.yzw.myblog.vo.Tag">
+        select * from tag where tagid = #{id}
+    </select>
+
+    <delete id="deleteTag" parameterType="java.lang.Integer">
+        delete from tag where tagid = #{id}
+    </delete>
+
+    <update id="updateTag" parameterType="cn.yzw.myblog.vo.Tag">
+        update tag set tagname = #{tagname},tagcontext = #{tagcontext} where tagid = #{id}
+    </update>
+
+    <insert id="saveTag" parameterType="cn.yzw.myblog.vo.Tag">
+        insert into tag (tagname, tagcontext) values (#{tagname},#{tagcontext})
+    </insert>
+
+    <select id="findByPage" parameterType="java.util.Map" resultType="cn.yzw.myblog.vo.Tag">
+        select * from tag limit #{start},#{rows}
+    </select>
+
+    <select id="findAllCount" resultType="java.lang.Integer">
+        select count(*) from tag
+    </select>
+
+    <select id="findTagCount" resultType="java.util.Map">
+        select tag.tagid,tag.tagname,count(*) as tagcount from article_tag
+        left join tag  on article_tag.tagid = tag.tagid
+        group by tag.tagname,tag.tagid;
+    </select>
+
+    <insert id="saveTagOfArticle" parameterType="java.lang.Integer">
+        insert into article_tag(articleid, tagid) values(#{arid},#{tagId})
+    </insert>
+
+</mapper>

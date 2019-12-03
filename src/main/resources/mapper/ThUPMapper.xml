@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yzw.myblog.dao.ThUpDao">
+    
+    <select id="findAllCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(*) from thumbs_up where bo_id = #{id}
+    </select>
+
+    <insert id="saveThUp" parameterType="cn.yzw.myblog.vo.ThUp">
+        insert into thumbs_up(bo_id, art_id, utime, use_id) values (#{BoId},#{ArId},now(),#{UId})
+    </insert>
+
+    <delete id="deleteThUP" parameterType="java.lang.Integer">
+        delete from thumbs_up where art_id = {#aid} and use_id = {#uid}
+    </delete>
+
+
+</mapper>

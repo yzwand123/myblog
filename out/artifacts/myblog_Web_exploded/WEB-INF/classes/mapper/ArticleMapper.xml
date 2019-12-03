@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.yzw.myblog.dao.ArticleDao">
+
+    <resultMap id="article" type="cn.yzw.myblog.vo.Article">
+        <id property="id" column="id"/>
+        <result property="articleTitle" column="articleTitle"/>
+        <result property="article_boId" column="article_boId"/>
+        <result property="articleAbstract" column="articleAbstract"/>
+        <result property="articleContext" column="ariticlecontext"/>
+        <result property="createTime" column="createTime"/>
+        <result property="authorName" column="nickname"/>
+        <collection property="tags" ofType="cn.yzw.myblog.vo.Tag">
+            <id property="tagid" column="tagid"/>
+            <result property="tagname" column="tagName"/>
+        </collection>
+        <collection property="saveImages" ofType="cn.yzw.myblog.vo.SaveImage">
+            <id property="id" column="img_id"/>
+            <result property="arid" column="arid"/>
+            <result property="url" column="imageurl"/>
+        </collection>
+    </resultMap>
+
+    <sql id="article_col">
+       article.id,article.articletitle,article.articleabstract,
+       article.createtime
+    </sql>
+
+    <sql id="user_col">
+        user.nickname
+    </sql>
+    <sql id="tag_col">
+        tag.tagid,tag.tagname
+    </sql>
+    <sql id="img_col">
+        imgpool.arid,imgpool.imageurl,imgpool.img_id
+    </sql>
+    <select id="findById" parameterType="java.lang.Integer" resultMap="article">
+        select
+            <include refid="article_col"/>,article.ariticlecontext,
+            <include refid="user_col"/>,
+            <include refid="tag_col"/>,
+            <include refid="img_col"/>
+        from article
+        left join imgpool on article.id = imgpool.arid
+        left join user on article.article_boid = user.id
+        left join article_tag a on a.articleid = article.id
+        left join tag on a.tagid = tag.tagid
+        where article.id = #{id}
+    </select>
+
+    <insert id="saveArticle" parameterType="cn.yzw.myblog.vo.Article">
+        <selectKey keyProperty="id" keyColumn="id" resultType="java.lang.Integer" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+        insert into article(article_boid, articletitle, articleabstract, ariticlecontext, createtime)
+        values (#{article_boId},#{articleTitle},#{articleAbstract},#{articleContext},now())
+    </insert>
+
+    <select id="findByPageWithTag" parameterType="java.util.Map" resultType="cn.yzw.myblog.vo.Article">
+        select
+            <include refid="article_col"/>
+        from article
+        left join article_tag a on article.id = a.articleid
+        left join tag t on a.tagid = t.tagid
+        where t.tagid = #{id}
+        order by article.createtime desc
+        limit #{start},#{rows}
+    </select>
+
+    <select id="findByPageWithCategory" parameterType="java.util.Map" resultType="cn.yzw.myblog.vo.Article">
+        select
+            <include refid="article_col"/>
+        from article
+        left join acticle_category ac on article.id = ac.articleid
+        left join category on  category.id = ac.categoryid
+        where category.id = #{id}
+        order by article.createtime desc
+        limit #{start},#{rows}
+    </select>
+
+    <select id="findByPageWithKey" resultType="cn.yzw.myblog.vo.Article" parameterType="java.util.Map">
+        select
+            <include refid="article_col"/>,user.nickName as authorName
+        from article
+        left join user on article.article_boid = user.id
+        <if test="key != null">
+        where article.articletitle like #{key}
+        </if>
+        order by article.createtime desc
+        limit #{start},#{rows}
+    </select>
+
+    <select id="findArticleCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(*) as articleCount from article where article_boid = #{id}
+    </select>
+
+    <select id="findViewByArticleCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(*) from view where art_id = #{id}
+    </select>
+
+    <select id="findThUPByArticleCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(*) from thumbs_up where art_id = #{id}
+    </select>
+
+    <insert id="addViewCount" parameterType="java.lang.Integer">
+        insert into view(bo_id, art_id, vtime) values (1,#{id},now())
+    </insert>
+
+    <insert id="saveImage" parameterType="cn.yzw.myblog.vo.SaveImage">
+        insert into imgpool(arid, imageurl)values(#{arid},#{url})
+    </insert>
+
+</mapper>
